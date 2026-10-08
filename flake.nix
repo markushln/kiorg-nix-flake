@@ -21,10 +21,10 @@
         openssl
         stdenv.cc.cc.lib
         zlib
-        xorg.libX11
-        xorg.libXcursor
-        xorg.libXi
-        xorg.libXrandr
+        libx11
+        libxcursor
+        libxi
+        libxrandr
       ]);
 
       kiorg = pkgs.stdenvNoCC.mkDerivation {
@@ -52,10 +52,10 @@
           openssl
           stdenv.cc.cc.lib
           zlib
-          xorg.libX11
-          xorg.libXcursor
-          xorg.libXi
-          xorg.libXrandr
+          libx11
+          libxcursor
+          libxi
+          libxrandr
         ];
 
         dontBuild = true;
