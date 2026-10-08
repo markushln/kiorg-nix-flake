@@ -8,36 +8,54 @@
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
       lib = pkgs.lib;
+
       version = "1.6.2";
+
+      runtimeLibs = lib.makeLibraryPath (with pkgs; [
+        wayland
+        libxkbcommon
+        libGL
+        vulkan-loader
+        fontconfig
+        freetype
+        openssl
+        stdenv.cc.cc.lib
+        zlib
+        xorg.libX11
+        xorg.libXcursor
+        xorg.libXi
+        xorg.libXrandr
+      ]);
 
       kiorg = pkgs.stdenvNoCC.mkDerivation {
         pname = "kiorg";
-         inherit version system;
+        inherit version;
 
         src = pkgs.fetchzip {
-          url = "https://github.com/houqp/kiorg/releases/download/v${version}/kiorg-v${version}-${system}.zip";
+          url = "https://github.com/houqp/kiorg/releases/download/v${version}/kiorg-v${version}-x86_64-linux.zip";
           hash = "sha256-hACM8TJ0zfUaJTbdEgsKlKYEUDN5sUNNwqUGHM++OtI=";
         };
 
-        nativeBuildInputs = [
-          pkgs.autoPatchelfHook
-          pkgs.unzip
+        nativeBuildInputs = with pkgs; [
+          autoPatchelfHook
+          patchelf
+          makeWrapper
         ];
 
         buildInputs = with pkgs; [
+          wayland
+          libxkbcommon
+          libGL
+          vulkan-loader
           fontconfig
           freetype
-          libGL
-          libxkbcommon
           openssl
           stdenv.cc.cc.lib
-          vulkan-loader
-          wayland
+          zlib
           xorg.libX11
           xorg.libXcursor
           xorg.libXi
           xorg.libXrandr
-          zlib
         ];
 
         dontBuild = true;
@@ -47,21 +65,32 @@
 
           mkdir -p "$out/bin" "$out/lib"
 
-          # Install the main executable.
-          binary="$(find . -type f -name kiorg -perm /111 -print -quit)"
+          # ZIP archives do not always preserve executable permissions.
+          binary="$(find . -type f -name kiorg -print -quit)"
+
           if [ -z "$binary" ]; then
             echo "Could not find executable named kiorg in release archive."
-            echo "Archive contents:"
             find . -maxdepth 3 -type f
             exit 1
           fi
 
           install -m755 "$binary" "$out/bin/kiorg"
 
-          # Preserve any shared libraries shipped in the archive.
-          find . -type f -name '*.so*' -exec cp -n -t "$out/lib" {} + || true
+          # Preserve any shared libraries shipped with the release.
+          find . -type f -name '*.so*' \
+            -exec cp -n -t "$out/lib" {} + || true
 
           runHook postInstall
+        '';
+
+        postFixup = ''
+          # Provide libraries loaded dynamically by winit, including Wayland.
+          patchelf \
+            --set-rpath "${runtimeLibs}:$out/lib" \
+            "$out/bin/kiorg"
+
+          wrapProgram "$out/bin/kiorg" \
+            --prefix LD_LIBRARY_PATH : "${runtimeLibs}:$out/lib"
         '';
 
         meta = {
@@ -72,7 +101,8 @@
           platforms = [ "x86_64-linux" ];
         };
       };
-    in {
+    in
+    {
       packages.${system} = {
         default = kiorg;
         kiorg = kiorg;
