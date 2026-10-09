@@ -128,6 +128,14 @@
           };
 
           cargoBuildFlags = [
+            "--release"
+            "-p"
+            "xdg-desktop-portal-kiorg"
+            "--bin"
+            "xdg-desktop-portal-kiorg"
+          ];
+
+          cargoTestFlags = [
             "-p"
             "xdg-desktop-portal-kiorg"
           ];
@@ -152,9 +160,17 @@
               "$out/share/dbus-1/services" \
               "$out/lib/systemd/user"
 
-            # Install the portal executable.
-            install -Dm755 \
-              target/release/xdg-desktop-portal-kiorg \
+            binary="$(find target -type f \
+              -path '*/release/xdg-desktop-portal-kiorg' \
+              -print -quit)"
+
+            if [ -z "$binary" ]; then
+              echo "Portal binary not found in target/"
+              find target -type f -name 'xdg-desktop-portal-kiorg'
+              exit 1
+            fi
+
+            install -Dm755 "$binary" \
               "$out/bin/xdg-desktop-portal-kiorg"
 
             # Register the backend with xdg-desktop-portal.
