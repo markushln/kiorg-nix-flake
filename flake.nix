@@ -121,7 +121,7 @@
           cargoLock = {
             lockFile = "${kiorgSrc}/Cargo.lock";
             outputHashes = {
-              "egui_nerdfonts-0.1.3" = lib.fakeHash;;
+              "egui_nerdfonts-0.1.3" = lib.fakeHash;
             };
           }
 
