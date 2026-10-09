@@ -65,6 +65,7 @@
           libxcursor
           libxi
           libxrandr
+          ld
         ];
 
         dontBuild = true;
