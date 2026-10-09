@@ -128,7 +128,6 @@
           };
 
           cargoBuildFlags = [
-            "--release"
             "-p"
             "xdg-desktop-portal-kiorg"
             "--bin"
