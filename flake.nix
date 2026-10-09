@@ -65,7 +65,6 @@
           libxcursor
           libxi
           libxrandr
-          ld
         ];
 
         dontBuild = true;
@@ -131,6 +130,12 @@
           cargoBuildFlags = [
             "-p"
             "xdg-desktop-portal-kiorg"
+          ];
+
+          nativeBuildInputs = with pkgs; [
+            pkg-config
+            clang
+            lld
           ];
 
           installPhase = ''
