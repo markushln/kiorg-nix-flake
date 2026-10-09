@@ -136,6 +136,9 @@
             pkg-config
             clang
             lld
+          ];
+
+          buildInputs = with pkgs; [
             openssl
           ];
 
