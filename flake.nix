@@ -123,7 +123,7 @@
             outputHashes = {
               "egui_nerdfonts-0.1.3" = lib.fakeHash;
             };
-          }
+          };
 
           cargoBuildFlags = [
             "-p"
