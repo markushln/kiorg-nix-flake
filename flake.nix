@@ -123,6 +123,7 @@
             outputHashes = {
               "egui_nerdfonts-0.1.3" = lib.fakeHash;
               "egui_term-0.1.0" = lib.fakeHash;
+              "image-extras-0.1.0" = lib.fakeHash;
             };
           };
 
