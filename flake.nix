@@ -118,7 +118,12 @@
 
           src = kiorgSrc;
 
-          cargoLock.lockFile = "${kiorgSrc}/Cargo.lock";
+          cargoLock = {
+            lockFile = "${kiorgSrc}/Cargo.lock";
+            outputHashes = {
+              "egui_nerdfonts-0.1.3" = lib.fakeHash;;
+            };
+          }
 
           cargoBuildFlags = [
             "-p"
