@@ -140,6 +140,7 @@
 
           buildInputs = with pkgs; [
             openssl
+            fontconfig
           ];
 
           installPhase = ''
