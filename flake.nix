@@ -136,6 +136,7 @@
             pkg-config
             clang
             lld
+            openssl
           ];
 
           installPhase = ''
