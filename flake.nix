@@ -42,7 +42,7 @@
 
         src = pkgs.fetchzip {
           url = "https://github.com/markushln/kiorg/releases/download/v${version}/kiorg-v${version}-x86_64-linux.zip";
-          hash = "sha256-hACM8TJ0zfUaJTbdEgsKlKYEUDN5sUNNwqUGHM++OtI=";
+          hash = "sha256-fXrg5HwocLHNtikf83a4v6pb0Vdh/XN4AWzLQxPP6Cw=";
         };
 
         nativeBuildInputs = with pkgs; [
